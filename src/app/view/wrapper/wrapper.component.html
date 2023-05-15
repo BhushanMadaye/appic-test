@@ -1,24 +1,28 @@
 <div class="wrapper">
   <div class="navbar">
     <h2>Employees</h2>
+    <!-- Sort -->
     <div>
-      <button (click)="sort('ASC')">Ascending</button>
+      <button style="margin-right: 10px;" (click)="sort('ASC')">Ascending</button>
       <button (click)="sort('DESC')">Descending</button>
-      <!-- Age Filter -->
+    </div>
+
+    <!-- Age Filter -->
+    <div>
       <label for="age">Age group</label>
-      <select id="age">
-        <option value="volvo">Volvo</option>
-        <option value="saab">Saab</option>
-        <option value="opel">Opel</option>
-        <option value="audi">Audi</option>
+      <select [(ngModel)]="selectedAgeRange" id="age" (change)="onChangeAge()">
+        <option value="0">None</option>
+        <option *ngFor="let group of ageGroups" [value]="group">{{group}}</option>
       </select>
     </div>
 
+    <!-- Search -->
     <div class="search-container">
-        <input #search type="text" placeholder="Search.." name="search">
-        <button (click)="searchEmployee(search)">Search</button>
+        <input [(ngModel)]="search" type="text" placeholder="Search.." name="search">
+        <button (click)="searchEmployee()">Search</button>
     </div>
 
+    <!-- Reset -->
     <div class="search-container">
       <button (click)="resetFilter()">RESET</button>
   </div>

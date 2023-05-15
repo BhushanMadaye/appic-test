@@ -7,6 +7,7 @@ import { WrapperComponent } from './view/wrapper/wrapper.component';
 import { DataTableComponent } from './view/data-table/data-table.component';
 import { HttpClientModule } from '@angular/common/http';
 import { SearchPipe } from './pipes/search.pipe';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { SearchPipe } from './pipes/search.pipe';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule
   ],
   providers: [SearchPipe],
   bootstrap: [AppComponent]

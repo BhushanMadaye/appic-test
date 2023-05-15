@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { catchError, map, max } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { Employee } from 'src/app/models/employee.model';
 import { SearchPipe } from 'src/app/pipes/search.pipe';
 import { EmployeeService } from 'src/app/services/employee.service';
@@ -15,7 +15,9 @@ export class WrapperComponent implements OnInit {
   employees: Employee[] = [];
   employeesMaster: Employee[] = [];
   ageGroups: any[] = [];
-  @ViewChild('search') search: ElementRef<HTMLInputElement> = {} as ElementRef;;
+  selectedAgeRange = '0';
+  search: string = '';
+  // @ViewChild('search') search: ElementRef<HTMLInputElement> = {} as ElementRef;;
 
   constructor(
     private employeeService: EmployeeService,
@@ -60,32 +62,37 @@ export class WrapperComponent implements OnInit {
     console.log({ oldestEmployee })
 
     const GROUP_SIZE = 20;
-    let minAge = 0;
-    let maxAge = minAge + GROUP_SIZE;
-    do {
-      const group = {
-        min: minAge,
-        max: maxAge,
-        value: `[${minAge} - ${maxAge}]`,
-      }
-      this.ageGroups.push(group);
-      minAge = maxAge;
-      maxAge = minAge + GROUP_SIZE;
+    const maxRange = oldestEmployee % 20 === 0 ? oldestEmployee / 20 : Math.floor(oldestEmployee / 20) + 1;
+    for (let i = 0; i < maxRange; i++) {
+      const startAge = i === 0 ? 0 : (i * GROUP_SIZE) + 1;
+      const endAge = startAge === 0 ? startAge + GROUP_SIZE : (startAge + GROUP_SIZE) - 1;
+      const range = `${startAge}-${endAge}`;
+      this.ageGroups.push(range);
     }
-
-    while (minAge <= oldestEmployee && oldestEmployee <= maxAge);
-
-    console.log(this.ageGroups)
   }
 
   /** Search by Employee Name */
-  searchEmployee(event: HTMLInputElement) {
-    console.log(event.value)
-    this.employees = [...this.searchPipe.transform(this.employeesMaster, event.value.trim())];
+  searchEmployee() {
+    this.employees = [...this.searchPipe.transform(this.employeesMaster, this.search.trim())];
+  }
+
+  onChangeAge() {
+    if (this.selectedAgeRange == '0') {
+      this.employees = [...this.employeesMaster];
+    } else {
+      this.filterByAgeRange();
+    }
+  }
+
+  filterByAgeRange() {
+    const [minAge, maxAge] = this.selectedAgeRange.split('-');
+    this.employees = this.employeesMaster.filter(e => e.employee_age >= Number(minAge) && e.employee_age <= Number(maxAge));
   }
 
   resetFilter() {
     this.employees = [...this.employeesMaster];
-    this.search.nativeElement.value = '';
+    // this.search.nativeElement.value = '';
+    this.search = '';
+    this.selectedAgeRange = '0';
   }
 }
