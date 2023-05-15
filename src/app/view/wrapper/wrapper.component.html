@@ -1,0 +1,38 @@
+<div class="wrapper">
+  <div class="navbar">
+    <h2>Employees</h2>
+    <div>
+      <button (click)="sort('ASC')">Ascending</button>
+      <button (click)="sort('DESC')">Descending</button>
+      <!-- Age Filter -->
+      <label for="age">Age group</label>
+      <select id="age">
+        <option value="volvo">Volvo</option>
+        <option value="saab">Saab</option>
+        <option value="opel">Opel</option>
+        <option value="audi">Audi</option>
+      </select>
+    </div>
+
+    <div class="search-container">
+        <input #search type="text" placeholder="Search.." name="search">
+        <button (click)="searchEmployee(search)">Search</button>
+    </div>
+
+    <div class="search-container">
+      <button (click)="resetFilter()">RESET</button>
+  </div>
+  </div>
+
+  <div class="container">
+    <app-data-table *ngIf="employees.length; else noDataFound" [data]="employees"></app-data-table>
+
+    <ng-template #noDataFound>
+      <div style="text-align: center;">
+        No Data Found
+      </div>
+    </ng-template>
+  </div>
+</div>
+
+
